@@ -33,24 +33,44 @@ public class ExceptionTrial {
                 }
             }
             else if (userAction.equals("2")) {
+                try {
                 System.out.println("Enter the index you want to retrieve ");
                 int retIdx = Integer.parseInt(scanner.nextLine());
 
                 System.out.println(strArr[retIdx]);
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input! Please enter a valid integer");
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    System.out.println("Invalid index! Please enter an index between 0 and " + (strArr.length - 1));
+                }
             }
             else if (userAction.equals("3")) {
-                System.out.println("Enter the index you want the length of ");
-                int retIdx = Integer.parseInt(scanner.nextLine());
-                System.out.println(strArr[retIdx].length());
+                try {
+                    System.out.println("Enter the index you want the length of ");
+                    int retIdx = Integer.parseInt(scanner.nextLine());
+                    System.out.println(strArr[retIdx].length());
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input! Please enter a valid integer.");
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    System.out.println("Invalid index! Please enter an index between 0 and " + (strArr.length -1));
+                } catch (NullPointerException e) {
+                    System.out.println("No string exists at the specified index!");
+                }
             }
             else if (userAction.equals("4")) {
-                for (int i=0; i<strArr.length;i++){
-                    System.out.println(strArr[i] + "\n");
+                System.out.println("Strings in the array:");
+                for (int i = 0; i < strIdx; i++) {
+                    if (strArr[i] != null) {
+                        System.out.println("Index " + i + ": " + strArr[i]);
+                    } else {
+                        System.out.println("Index " + i + ": (null)");
+                    }
                 }
             }
             else {
                 break;
             }
         }
+        scanner.close();
     }
 }
