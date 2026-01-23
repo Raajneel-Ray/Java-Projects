@@ -10,6 +10,20 @@ class ItemNotFoundException extends Exception {
 
 public class GroceryShopping {
 
+    public static void searchItem(String[] items, String itemName) {
+        boolean found = false;
+        for(int i=0; i<items.length; i++){
+            if(items[i].equalsIgnoreCase(itemName)){
+                found = true;
+                System.out.println("The item is found at index " +i);
+                break;
+            }
+        }
+        if(!found) {
+            System.out.println("Item not found");
+        }
+    }
+    
     public static void main(String[] args) {
         String[] item = new String[10];
         float[] price = new float[10];
