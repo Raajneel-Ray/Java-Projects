@@ -1,8 +1,6 @@
-
 import java.util.Scanner;
 
 class ItemNotFoundException extends Exception {
-
     public ItemNotFoundException(String message) {
         super(message);
     }
@@ -12,85 +10,97 @@ public class GroceryShopping {
 
     public static void searchItem(String[] items, String itemName) {
         boolean found = false;
-        for(int i=0; i<items.length; i++){
-            if(items[i].equalsIgnoreCase(itemName)){
+        for (int i = 0; i < items.length; i++) {
+            if (items[i].equalsIgnoreCase(itemName)) {
                 found = true;
-                System.out.println("The item is found at index " +i);
+                System.out.println("The item is found at index " + i);
                 break;
             }
         }
-        if(!found) {
+        if (!found) {
             System.out.println("Item not found");
         }
     }
-    
-    public static void main(String[] args) {
-        String[] item = new String[10];
-        float[] price = new float[10];
-        item[0] = "Apple";
-        price[0] = 0.50f;
-        item[1] = "Banana";
-        price[1] = 0.30f;
-        item[2] = "Bread";
-        price[2] = 2.00f;
-        item[3] = "Milk";
-        price[3] = 1.50f;
-        item[4] = "Eggs";
-        price[4] = 2.50f;
-        item[5] = "Cheese";
-        price[5] = 3.00f;
-        item[6] = "Chicken";
-        price[6] = 5.00f;
-        item[7] = "Rice";
-        price[7] = 1.00f;
-        item[8] = "Pasta";
-        price[8] = 1.20f;
-        item[9] = "Tomato";
-        price[9] = 0.80f;
-        Scanner scanner = new Scanner(System.in);
 
-        while (true) {
-            float totalBill = 0.0f;
-            String userinput = scanner.nextLine();
-            if (userinput.equalsIgnoreCase("exit")) {
-                System.out.println("Thank you for using the shopping cart! Please visit again.");
-                break;
-            }
-            while (true) {
-                try {
-                    System.out.println("Enter the name of the item( or type 'finish' to end shopping.)");
-                    String inputItem = scanner.nextLine();
+    public static float calculateAveragePrice(float[] prices) {
+        float sum = 0;
+        for (float p : prices) sum += p;
+        return sum / prices.length;
+    }
 
-                    if (inputItem.equalsIgnoreCase("finish")) {
-                        System.out.println("Your Total Bill is : $" + totalBill);
-                        System.out.println("Thank you for shopping with us!");
-                        break;
-                    }
-                    // find the index of the item 
-                    int itemIdx = -1;
-                    for (int i = 0; i < item.length; i++) {
-                        if (item[i].equalsIgnoreCase(inputItem)) {
-                            itemIdx = i;
-                            break;
-                        }
-                    }
-                    if (itemIdx == -1) {
-                        throw new ItemNotFoundException("Item '" + inputItem + "' not found. Please try again");
-                    }
-                    // ask for the quantity of item
-                    System.out.println("Enter the quantity of " + item[itemIdx] + " you want of purchase.");
-                    int quantity = Integer.parseInt(scanner.nextLine());
-                    scanner.nextLine();
-                    float itemCost = quantity * price[itemIdx];
-                    totalBill += itemCost;
-                    System.out.println("Added " + quantity + " x " + item[itemIdx] + " to the bill. Current total : $" + totalBill);
-                } catch (ItemNotFoundException e) {
-                    System.out.println(e.getMessage());
-                } catch (Exception e) {
-                    System.out.println("Invalid Input! Please try again.");
-                    scanner.nextLine();
-                }
+    public static void filterItemsBelowPrice(String[] items, float[] prices, float threshold) {
+        System.out.println("\nItems below $" + threshold + ":");
+        for (int i = 0; i < prices.length; i++) {
+            if (prices[i] < threshold) {
+                System.out.println("- " + items[i] + " ($" + prices[i] + ")");
             }
         }
+    }
+
+    public static void main(String[] args) {
+
+        String[] item = {"Apple","Banana","Bread","Milk","Eggs","Cheese","Chicken","Rice","Pasta","Tomato"};
+        float[] price = {0.50f,0.30f,2.00f,1.50f,2.50f,3.00f,5.00f,1.00f,1.20f,0.80f};
+        int[] stock = {10,15,8,10,12,6,5,20,18,25};
+
+        System.out.println("Average price: $" + calculateAveragePrice(price));
+        filterItemsBelowPrice(item, price, 1.0f);
+        searchItem(item, "Milk");
+        searchItem(item, "Mango");
+
+        Scanner scanner = new Scanner(System.in);
+        float totalBill = 0.0f;
+
+        while (true) {
+            try {
+                System.out.println("\nEnter item name (or 'finish' to checkout):");
+                String inputItem = scanner.nextLine();
+
+                if (inputItem.equalsIgnoreCase("finish")) {
+                    System.out.println("Original Total Bill: $" + totalBill);
+                    if (totalBill > 100) {
+                        float discountedTotal = totalBill * 0.9f;
+                        System.out.println("Discount Applied! New Total: $" + discountedTotal);
+                    } else {
+                        System.out.println("No discount applied.");
+                    }
+                    System.out.println("Thank you for shopping!");
+                    break;
+                }
+
+                int itemIdx = -1;
+                for (int i = 0; i < item.length; i++) {
+                    if (item[i].equalsIgnoreCase(inputItem)) {
+                        itemIdx = i;
+                        break;
+                    }
+                }
+
+                if (itemIdx == -1) {
+                    throw new ItemNotFoundException("Item not found.");
+                }
+
+                System.out.println("Enter quantity:");
+                int quantity = Integer.parseInt(scanner.nextLine());
+
+                if (quantity > stock[itemIdx]) {
+                    System.out.println("Sorry, only " + stock[itemIdx] + " left.");
+                    continue;
+                }
+
+                float cost = quantity * price[itemIdx];
+                totalBill += cost;
+                stock[itemIdx] -= quantity;
+
+                System.out.println("Added to cart. Current total: $" + totalBill);
+
+            } catch (ItemNotFoundException e) {
+                System.out.println(e.getMessage());
+            } catch (Exception e) {
+                System.out.println("Invalid input! Try again.");
+            }
+        }
+
+        scanner.close();
     }
 }
