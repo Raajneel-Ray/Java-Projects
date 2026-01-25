@@ -1,28 +1,6 @@
 // adding an overloaded constructor
-public class Book {
-    private  String title;
-    private String author;
-    private float price;
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-    public void setPrice(float price) {
-        this.price = price;
-    }
-    public String getTitle() {
-        return this.title;
-    }
-    public String getAuthor() {
-        return this.author;
-    }
-    public float getPrice() {
-        return this.price;
-    }
-    // When you create an overloaded constructor, another constructor with the same name (using the class name) but different sets of parameters, you need to also create a default constructor.
+/**
+ *     // When you create an overloaded constructor, another constructor with the same name (using the class name) but different sets of parameters, you need to also create a default constructor.
 
     public Book() { // This is the default constructor, which will create an instance but the values will have to be explicitly set with the setters.
         this.title = null;
@@ -34,8 +12,69 @@ public class Book {
         this.author = author;
         this.price = price;
     }
+ */
+public class Book implements Cloneable {
+    private String title;
+    private String author;
+    private float price;
+
+    // Default constructor
+    public Book() {
+        this.title = "Unknown";
+        this.author = "Unknown";
+        this.price = 0.0f;
+    }
+
+    // Overloaded constructor
+    public Book(String title, String author, float price) {
+        this.title = title;
+        this.author = author;
+        this.price = price;
+    }
+
+    // Clone method
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
+
+    // Setters
+    public void setTitle(String title) { this.title = title; }
+    public void setAuthor(String author) { this.author = author; }
+    public void setPrice(float price) { this.price = price; }
+
+    // Getters
+    public String getTitle() { return title; }
+    public String getAuthor() { return author; }
+    public float getPrice() { return price; }
+
+    // toString
+    @Override
     public String toString() {
-        return "Title - " + this.title + "\nAuthor - "
-            + this.author + "\nPrice - "+ String.format("%.2f", this.price);
+        return "Title - " + title +
+               "\nAuthor - " + author +
+               "\nPrice - " + String.format("%.2f", price);
+    }
+
+    // Proper equals method
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        Book book = (Book) obj;
+
+        return Float.compare(book.price, price) == 0 &&
+               title.equals(book.title) &&
+               author.equals(book.author);
+    }
+
+    // hashCode (required when equals is overridden)
+    @Override
+    public int hashCode() {
+        int result = title.hashCode();
+        result = 31 * result + author.hashCode();
+        result = 31 * result + Float.hashCode(price);
+        return result;
     }
 }
