@@ -97,5 +97,21 @@ public class EcoPointsRecyclingTracker {
         // show success message and points earned
         System.out.println("Recycling event logged! Points earned - " + event.getEcoPoints());
     }
-
+    // this displays all the registered households
+    private static void displayHouseholds() {
+        // Check if the households map is empty
+        if (households.isEmpty()) {
+            System.out.println("No households registered.");
+            return; // Exit early if there's nothing to show
+        }
+        // If there are households, print a header first
+        System.out.println("\nRegistered Households:");
+        // Loop through each household in the map and print its details
+        for (Household h : households.values()) {
+            System.out.println("ID: " + h.getId() +
+                               ", Name: " + h.getName() +
+                               ", Address: " + h.getAddress() +
+                               ", Joined: " + h.getJoinDate());
+        }
+    }
 }
