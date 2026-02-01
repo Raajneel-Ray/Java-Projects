@@ -32,6 +32,7 @@ public class Household implements Serializable {
 
     public void addEvents(RecyclingEvent event) {
         this.events.add(event);
+        this.totalPoints += event.getEcoPoints();
     }
 
     public double getTotalWeight() {
