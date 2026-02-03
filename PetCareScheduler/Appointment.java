@@ -2,17 +2,19 @@ import java.io.Serializable; // Allows the class to be serialized for saving and
 import java.time.LocalDate;
 
 public class Appointment implements Serializable {
-    private String appointType; // vet visit, vaccination, grooming
+    
+    private static final long serialVersionUID = 1L;
+    private String appointmentType; // vet visit, vaccination, grooming
     private LocalDate date;
     private String notes;// optional
 
-    public Appointment(String appointType, String notes) {
-        this.appointType = appointType;
-        this.date = LocalDate.now();
+    public Appointment(String appointmentType, LocalDate date, String notes) {
+        this.appointmentType = appointmentType;
+        this.date = date;
         this.notes = notes;
     }
 
-    public String getAppointmentType() { return this.appointType; }
+    public String getAppointmentType() { return this.appointmentType; }
     public LocalDate getDate() {
         return this.date;
     }
@@ -26,7 +28,7 @@ public class Appointment implements Serializable {
     @Override
     public String toString() {
         return "Date : " + this.date +
-                "\nAppointment Type : " + this.appointType +
+                "\nAppointment Type : " + this.appointmentType +
                 "\nNotes : " + this.notes;
     }
 }
